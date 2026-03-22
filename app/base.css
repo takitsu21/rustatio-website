@@ -1,0 +1,20 @@
+:root {
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-mono: 'Chivo Mono', monospace;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
