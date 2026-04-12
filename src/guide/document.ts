@@ -7,7 +7,7 @@ import { buildGuideDocument, type GuideDocument } from './markdown';
 const REPOSITORY_README_PATH = path.resolve(process.cwd(), 'README.md');
 
 /** Stores the upstream README URL used as the primary guide source. */
-const REMOTE_README_URL = 'https://raw.githubusercontent.com/takitsu21/rustatio/refs/heads/main/README.md';
+const REMOTE_README_URL = 'https://codeberg.org/takitsu21/rustatio/raw/branch/main/README.md';
 
 /** Provides a final fallback guide document when no richer source is available. */
 const EMERGENCY_GUIDE_DOCUMENT: GuideDocument = {

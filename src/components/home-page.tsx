@@ -85,7 +85,7 @@ export function HomePage(): JSX.Element {
               Docs
             </a>
             <a href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
-              GitHub
+              Codeberg
             </a>
           </div>
           <div className="topnav-actions">
@@ -123,7 +123,7 @@ export function HomePage(): JSX.Element {
                   Run with Docker
                 </a>
                 <a className="text-link" href={links.repo} target="_blank" rel="noreferrer">
-                  View on GitHub
+                  View on Codeberg
                 </a>
               </div>
               <div className="platform-strip">
@@ -246,7 +246,7 @@ export function HomePage(): JSX.Element {
           <div className="section-heading reveal reveal-1">
             <span className="section-label">Live demo</span>
             <h2>Open the browser build that is already running.</h2>
-            <p>Try the public WebAssembly version on GitHub Pages, see the UI in action, and decide whether you want the desktop app, Docker deployment, or the hosted demo.</p>
+            <p>Try the public WebAssembly version, see the UI in action, and decide whether you want the desktop app, Docker deployment, or the hosted demo.</p>
           </div>
           <div className="cta-row reveal reveal-2">
             <a className="btn btn-primary" href={links.liveDemo} target="_blank" rel="noreferrer">
@@ -357,7 +357,7 @@ export function HomePage(): JSX.Element {
               Open live demo
             </a>
             <a className="text-link" href={links.releases} target="_blank" rel="noreferrer">
-              GitHub releases
+              Releases
             </a>
           </div>
         </section>
@@ -373,7 +373,7 @@ export function HomePage(): JSX.Element {
             Docker
           </a>
           <a href={links.repo} target="_blank" rel="noreferrer">
-            GitHub
+            Codeberg
           </a>
           <a href={links.webGuide} target="_blank" rel="noreferrer">
             Web setup

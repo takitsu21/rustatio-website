@@ -115,7 +115,7 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
               Live demo
             </a>
             <a href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
-              GitHub
+              Codeberg
             </a>
           </div>
           <div className="guide-topnav-actions">

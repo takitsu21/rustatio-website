@@ -31,16 +31,16 @@ const GUIDE_START = '## 🚀 Getting Started';
 /** Marks the end of the guide slice inside the upstream README. */
 const GUIDE_END = '## 🤝 Contributing';
 
-/** Stores the repository blob URL prefix for rewritten markdown links. */
-const REPO_BLOB_BASE = 'https://github.com/takitsu21/rustatio/blob/main/';
+/** Stores the repository source URL prefix for rewritten markdown links. */
+const REPO_BLOB_BASE = 'https://codeberg.org/takitsu21/rustatio/src/branch/main/';
 
 /** Stores the repository raw URL prefix for rewritten markdown images. */
-const REPO_RAW_BASE = 'https://raw.githubusercontent.com/takitsu21/rustatio/main/';
+const REPO_RAW_BASE = 'https://codeberg.org/takitsu21/rustatio/raw/branch/main/';
 
-/** Stores the optional GitHub Pages base path for rewritten local guide assets. */
+/** Stores the optional base path for rewritten local guide assets. */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-/** Builds a GitHub-compatible slugger for guide headings. */
+/** Builds a compatible slugger for guide headings. */
 function createSlugger(): GithubSlugger {
   return new GithubSlugger();
 }
@@ -61,7 +61,7 @@ export function normalizeHeadingText(text: string): string {
   return text.replace(/^[^\p{Letter}\p{Number}]+/u, '').replace(/\s+/g, ' ').trim();
 }
 
-/** Converts a normalized heading into a GitHub-style URL slug. */
+/** Converts a normalized heading into a URL slug. */
 export function slugifyHeading(text: string): string {
   const slugger = createSlugger();
   return slugger.slug(normalizeHeadingText(text));
