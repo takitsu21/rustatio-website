@@ -8,7 +8,7 @@ import '../src/guide-page.css';
 
 import { buildThemeScript } from '../src/theme';
 
-/** Stores the optional GitHub Pages base path for static metadata assets. */
+/** Stores the optional base path for static metadata assets. */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 /** Defines the shared metadata for the exported site. */

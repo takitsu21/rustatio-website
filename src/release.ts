@@ -5,13 +5,13 @@ export interface ReleaseInfo {
   url: string;
 }
 
-interface GitHubReleaseResponse {
+interface ReleaseResponse {
   tag_name?: string;
   html_url?: string;
 }
 
-/** Stores the GitHub API endpoint used to hydrate the latest release links. */
-const RELEASE_API_URL = 'https://api.github.com/repos/takitsu21/rustatio/releases/latest';
+/** Stores the Codeberg API endpoint used to hydrate the latest release links. */
+const RELEASE_API_URL = 'https://codeberg.org/api/v1/repos/takitsu21/rustatio/releases/latest';
 
 /** Removes the leading version prefix from a release tag when needed. */
 export function normalizeTag(tag: string): string {
@@ -36,12 +36,12 @@ export function getReleaseLabel(tag: string): string {
   return `Latest release ${tag}`;
 }
 
-/** Fetches the latest release metadata from GitHub for client-side hydration. */
+/** Fetches the latest release metadata from Codeberg for client-side hydration. */
 export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
   try {
     const response = await fetch(RELEASE_API_URL, {
       headers: {
-        Accept: 'application/vnd.github+json',
+        Accept: 'application/json',
       },
     });
 
@@ -49,7 +49,7 @@ export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
       return null;
     }
 
-    const data = (await response.json()) as GitHubReleaseResponse;
+    const data = (await response.json()) as ReleaseResponse;
     if (!data.tag_name) {
       return null;
     }

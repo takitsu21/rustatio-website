@@ -53,7 +53,7 @@ test('collectSections builds clean section metadata', () => {
 });
 
 test('link and image rewriting target site-safe locations', () => {
-  assert.equal(rewriteHref('WEB_VERSION.md'), 'https://github.com/takitsu21/rustatio/blob/main/WEB_VERSION.md');
+  assert.equal(rewriteHref('WEB_VERSION.md'), 'https://codeberg.org/takitsu21/rustatio/src/branch/main/WEB_VERSION.md');
   assert.equal(rewriteImageSrc('screenshots/dark-theme.png'), '/screenshots/dark-theme.png');
 });
 
@@ -65,7 +65,7 @@ test('buildGuideDocument injects heading ids and rewritten links', async () => {
   const guide = await buildGuideDocument(sampleReadme);
 
   assert.match(guide.html, /<h2 id="getting-started">/);
-  assert.match(guide.html, /href="https:\/\/github.com\/takitsu21\/rustatio\/blob\/main\/WEB_VERSION.md"/);
+  assert.match(guide.html, /href="https:\/\/codeberg.org\/takitsu21\/rustatio\/src\/branch\/main\/WEB_VERSION.md"/);
   assert.match(guide.html, /src="\/screenshots\/dark-theme.png"/);
 });
 

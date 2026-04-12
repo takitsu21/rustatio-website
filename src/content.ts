@@ -78,7 +78,7 @@ export interface FaqItem {
   answer: string;
 }
 
-/** Stores the optional GitHub Pages base path for client-side asset and route links. */
+/** Stores the optional base path for client-side asset and route links. */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 /** Prefixes a path with the configured deployment base path when needed. */
@@ -92,13 +92,13 @@ export const brandIconPath = withBasePath('/android-chrome-192x192.png');
 /** Stores the shared destination links used across the site. */
 export const links: LinkMap = {
   guide: withBasePath('/guide/'),
-  repo: 'https://github.com/takitsu21/rustatio',
-  releases: 'https://github.com/takitsu21/rustatio/releases/latest',
-  sourceReadme: 'https://github.com/takitsu21/rustatio#readme',
-  docker: 'https://github.com/takitsu21/rustatio#docker-self-hosted',
+  repo: 'https://codeberg.org/takitsu21/rustatio',
+  releases: 'https://codeberg.org/takitsu21/rustatio/releases/latest',
+  sourceReadme: 'https://codeberg.org/takitsu21/rustatio#readme',
+  docker: 'https://codeberg.org/takitsu21/rustatio#docker-self-hosted',
   liveDemo: 'https://takitsu21.github.io/rustatio/',
-  webGuide: 'https://github.com/takitsu21/rustatio/blob/main/WEB_VERSION.md',
-  packages: 'https://github.com/takitsu21/rustatio/pkgs/container/rustatio',
+  webGuide: 'https://codeberg.org/takitsu21/rustatio/src/branch/main/WEB_VERSION.md',
+  packages: 'https://codeberg.org/takitsu21/rustatio',
 };
 
 /** Lists the hero metrics shown near the top of the homepage. */
