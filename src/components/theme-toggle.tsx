@@ -3,11 +3,23 @@
 import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
 
-import { applyThemeState, getBrowserTheme, getThemeState, normalizeTheme, THEME_KEY, type Theme } from '../theme';
+import {
+  applyThemeState,
+  getBrowserTheme,
+  getThemeState,
+  normalizeTheme,
+  THEME_KEY,
+  type Theme,
+} from '../theme';
+
+/** Resolves the theme currently applied to the document, falling back to the system value. */
+function resolveDocumentTheme(): Theme {
+  return normalizeTheme(document.documentElement.dataset.theme) || getBrowserTheme();
+}
 
 /** Renders the shared theme toggle used across the homepage and guide page. */
 export function ThemeToggle(): JSX.Element {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -16,10 +28,6 @@ export function ThemeToggle(): JSX.Element {
     const syncTheme = (nextTheme: Theme) => {
       applyThemeState(nextTheme);
       setTheme(currentTheme => (currentTheme === nextTheme ? currentTheme : nextTheme));
-    };
-
-    const resolveDocumentTheme = (): Theme => {
-      return normalizeTheme(document.documentElement.dataset.theme) || getBrowserTheme();
     };
 
     frameId = window.requestAnimationFrame(() => {
@@ -46,18 +54,19 @@ export function ThemeToggle(): JSX.Element {
       className="theme-toggle"
       type="button"
       data-theme-toggle
-      aria-label={state.ariaLabel}
-      title={state.ariaLabel}
-      aria-pressed={theme === 'light'}
+      aria-label={theme ? state.ariaLabel : 'Toggle color theme'}
+      title={theme ? state.ariaLabel : 'Toggle color theme'}
+      aria-pressed={theme ? theme === 'light' : undefined}
       onClick={() => {
-        const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
+        const currentTheme = theme ?? resolveDocumentTheme();
+        const nextTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
         window.localStorage.setItem(THEME_KEY, nextTheme);
         applyThemeState(nextTheme);
         setTheme(nextTheme);
       }}
     >
       <span className="theme-toggle-icon" aria-hidden="true"></span>
-      <span data-theme-label>{state.currentLabel}</span>
+      <span data-theme-label>{theme ? state.currentLabel : 'Theme'}</span>
     </button>
   );
 }

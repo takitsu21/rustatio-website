@@ -1,23 +1,31 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   brandIconPath,
+  clients,
+  demo,
   downloadCards,
   faq,
-  heroPreview,
-  heroPreviewLight,
-  heroStats,
+  features,
+  heroCopy,
   links,
-  proofCards,
   safeguards,
-  showcase,
+  screenshots,
+  selfHosted,
+  specSheet,
   steps,
+  themeNames,
+  themePreview,
   useCases,
   type ReleaseTarget,
+  type ScreenshotPair,
 } from '../content';
+import { ClientIcon } from './client-icon';
+import { GitHubIcon } from './github-icon';
+import { SiteCredit } from './site-credit';
 import { ThemeToggle } from './theme-toggle';
 import { buildReleaseLinks, fetchLatestRelease, getReleaseLabel } from '../release';
 
@@ -25,7 +33,30 @@ import { buildReleaseLinks, fetchLatestRelease, getReleaseLabel } from '../relea
 const DEFAULT_RELEASE_LABEL = 'Latest release';
 
 /** Stores the footer copy rendered on the homepage. */
-const FOOTER_COPY = 'Built with Rust, Tauri, and a shared Svelte UI.';
+const FOOTER_COPY = 'A modern BitTorrent ratio faker.';
+
+/** Renders a dark and light screenshot pair; CSS shows the active theme. */
+function ThemeScreenshot({
+  pair,
+  priority = false,
+  eager = false,
+}: Readonly<{ pair: ScreenshotPair; priority?: boolean; eager?: boolean }>): JSX.Element {
+  const loading = priority || eager ? 'eager' : 'lazy';
+
+  return (
+    <>
+      <img
+        className="theme-shot theme-shot-dark"
+        src={pair.dark}
+        alt={pair.alt}
+        loading={loading}
+        fetchPriority={priority ? 'high' : undefined}
+        decoding="async"
+      />
+      <img className="theme-shot theme-shot-light" src={pair.light} alt={pair.alt} loading={loading} decoding="async" />
+    </>
+  );
+}
 
 /** Renders the fully static homepage as a small client component for hydration features. */
 export function HomePage(): JSX.Element {
@@ -51,337 +82,420 @@ export function HomePage(): JSX.Element {
     };
   }, []);
 
-  const currentYear = useMemo(() => new Date().getFullYear(), []);
-
   return (
     <div className="site-shell">
-      <header className="topbar">
-        <a className="brand" href="#top" aria-label="Rustatio home">
-          <img className="brand-mark" src={brandIconPath} alt="" width={32} height={32} />
-          <span className="brand-name">Rustatio</span>
-        </a>
-        <button
-          className={`nav-toggle${isNavOpen ? ' is-open' : ''}`}
-          type="button"
-          aria-expanded={isNavOpen}
-          aria-controls="home-nav"
-          aria-label={isNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          onClick={() => {
-            setIsNavOpen(open => !open);
-          }}
-        >
-          <span className="nav-toggle-bar"></span>
-          <span className="nav-toggle-bar"></span>
-        </button>
-        <nav className={`topnav${isNavOpen ? ' is-open' : ''}`} id="home-nav" aria-label="Primary">
-          <div className="topnav-links">
-            <a href="#features" onClick={() => setIsNavOpen(false)}>
-              Features
-            </a>
-            <a href="#live-demo" onClick={() => setIsNavOpen(false)}>
-              Live demo
-            </a>
-            <a href={links.guide} onClick={() => setIsNavOpen(false)}>
-              Docs
-            </a>
-            <a href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
-              Codeberg
-            </a>
-          </div>
-          <div className="topnav-actions">
-            <a className="btn btn-nav" href="#download" onClick={() => setIsNavOpen(false)}>
-              Download
-            </a>
-            <ThemeToggle />
-          </div>
-        </nav>
+      <header className="site-header">
+        <div className="shell header-inner">
+          <a className="brand" href="#top" aria-label="Rustatio home">
+            <img className="brand-mark" src={brandIconPath} alt="" width={28} height={28} />
+            <span className="brand-name">Rustatio</span>
+          </a>
+          <button
+            className={`nav-toggle${isNavOpen ? ' is-open' : ''}`}
+            type="button"
+            aria-expanded={isNavOpen}
+            aria-controls="home-nav"
+            aria-label={isNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            onClick={() => {
+              setIsNavOpen(open => !open);
+            }}
+          >
+            <span className="nav-toggle-bar"></span>
+            <span className="nav-toggle-bar"></span>
+          </button>
+          <nav className={`site-nav${isNavOpen ? ' is-open' : ''}`} id="home-nav" aria-label="Primary">
+            <div className="nav-links">
+              <a href="#demo" onClick={() => setIsNavOpen(false)}>
+                Demo
+              </a>
+              <a href="#fleet" onClick={() => setIsNavOpen(false)}>
+                Fleet
+              </a>
+              <a href="#automation" onClick={() => setIsNavOpen(false)}>
+                Automation
+              </a>
+              <a href="#metrics" onClick={() => setIsNavOpen(false)}>
+                Metrics
+              </a>
+              <a href="#download" onClick={() => setIsNavOpen(false)}>
+                Install
+              </a>
+              <a href={links.guide} onClick={() => setIsNavOpen(false)}>
+                Docs
+              </a>
+              <a className="github-link" href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
+                <GitHubIcon />
+                GitHub
+              </a>
+            </div>
+            <div className="nav-actions">
+              <ThemeToggle />
+              <a className="btn btn-primary btn-small" href="#download" onClick={() => setIsNavOpen(false)}>
+                Download
+              </a>
+            </div>
+          </nav>
+        </div>
       </header>
 
       <main id="top">
-        <section className="hero section-frame">
-          <div className="hero-grid">
-            <div className="hero-copy reveal reveal-1">
-              <div className="eyebrow-row">
-                <span className="eyebrow-pill">Rust-powered</span>
-                <span className="eyebrow-pill muted">{releaseLabel}</span>
-              </div>
-              <h1 className="hero-wordmark" aria-label="Rustatio">
-                <img className="hero-wordmark-mark" src={brandIconPath} alt="" width={96} height={96} />
-                <span>Rustatio</span>
-              </h1>
-              <p className="hero-lead">
-                Rustatio emulates popular torrent clients, shapes realistic transfer behavior, and keeps live session telemetry in one deliberate interface across desktop, Docker, and the web.
-              </p>
-              <div className="cta-row">
-                <a className="btn btn-primary" href={links.guide}>
-                  Get started
-                </a>
-                <a className="btn btn-download" href="#download">
-                  Download
-                </a>
-                <a className="btn btn-secondary" href={links.docker} target="_blank" rel="noreferrer">
-                  Run with Docker
-                </a>
-                <a className="text-link" href={links.repo} target="_blank" rel="noreferrer">
-                  View on Codeberg
-                </a>
-              </div>
-              <div className="platform-strip">
-                <span>Windows</span>
-                <span>macOS</span>
-                <span>Linux</span>
-                <span>Docker</span>
-                <span>Web UI</span>
-              </div>
-              <p className="hero-note">For educational use. Tracker rules and account risk still apply.</p>
+        <section className="hero shell">
+          <div className="hero-copy">
+            <p className="hero-kicker">
+              <span className="live-dot" aria-hidden="true"></span>
+              <span>{releaseLabel}</span>
+              <span className="kicker-sep">/</span>
+              <span>sample data</span>
+            </p>
+            <h1>{heroCopy.title}</h1>
+            <p className="hero-lede">{heroCopy.lede}</p>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href="#download">
+                Download Rustatio
+              </a>
+              <a className="btn btn-secondary" href={links.liveDemo} target="_blank" rel="noreferrer">
+                Open live demo
+              </a>
             </div>
+            <p className="hero-note">{heroCopy.note}</p>
+          </div>
 
-            <div className="hero-highlights reveal reveal-2">
-              <div className="stats-grid">
-                {heroStats.map(stat => (
-                  <article className={`stat-card stat-card-${stat.tone}`} key={stat.value}>
-                    <span className="stat-eyebrow">{stat.eyebrow}</span>
-                    <strong>{stat.value}</strong>
-                    <p>{stat.detail}</p>
-                    <div className="stat-tags" aria-label={`${stat.eyebrow} details`}>
-                      {stat.items.map(item => (
-                        <span className="stat-tag" key={item}>
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </article>
+          <figure className="hero-frame">
+            <div className="frame-bar">
+              <span className="frame-title">
+                Rustatio <span className="frame-slash">/</span> fleet
+              </span>
+              <span className="frame-badge">sample data</span>
+            </div>
+            <div className="frame-screen">
+              <ThemeScreenshot
+                pair={{
+                  dark: screenshots.darkTheme,
+                  light: screenshots.lightTheme,
+                  alt: 'Rustatio grid view with five sample sessions',
+                }}
+                priority
+              />
+            </div>
+            <figcaption className="frame-readout">
+              {heroCopy.readout.map(item => (
+                <span key={item}>{item}</span>
+              ))}
+            </figcaption>
+          </figure>
+        </section>
+
+        <section className="spec-band shell" aria-label="Rustatio at a glance">
+          <dl>
+            {specSheet.map(item => (
+              <div className="spec-item" key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section className="client-band shell" aria-label="Supported clients">
+          <div className="client-band-head">
+            <p className="client-band-title">Trackers see a familiar client.</p>
+            <p className="client-band-note">Six profiles, each with the version string trackers expect.</p>
+          </div>
+          <ul className="client-list">
+            {clients.map(client => (
+              <li className="client-item" key={client.name}>
+                <span className="client-mark">
+                  <ClientIcon name={client.icon} className="client-icon" />
+                </span>
+                <span className="client-copy">
+                  <span className="client-name">{client.name}</span>
+                  <span className="client-version">{client.version}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="section shell" id="demo">
+          <aside className="section-rail">
+            <p className="rail-label">Demo</p>
+          </aside>
+          <div className="section-body">
+            <div className="demo-heading">
+              <h2>{demo.title}</h2>
+              <p>{demo.body}</p>
+            </div>
+            <figure className="demo-frame">
+              <div className="frame-bar">
+                <span className="frame-title">
+                  Rustatio <span className="frame-slash">/</span> walkthrough
+                </span>
+              </div>
+              <div className="demo-screen">
+                <video
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster={demo.poster}
+                  aria-label="Rustatio product walkthrough"
+                >
+                  <source src={demo.video} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <figcaption className="frame-readout">
+                {demo.chapters.map(chapter => (
+                  <span key={chapter}>{chapter}</span>
                 ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="hero-preview reveal reveal-2" aria-hidden="true">
-            <div className="hero-visual">
-              <div className="hero-shot">
-                <img
-                  src={heroPreview}
-                  alt="Rustatio interface preview"
-                  data-theme-shot
-                  data-dark-src={heroPreview}
-                  data-light-src={heroPreviewLight}
-                />
-              </div>
-            </div>
-            <div className="telemetry-stack">
-              <article className="telemetry-card compact">
-                <span className="chip chip-good">live stats</span>
-                <strong>Ratio, rates, peers</strong>
-                <p>Track upload, download, ratio movement, and peer activity while the session is running.</p>
-              </article>
-              <article className="telemetry-card compact">
-                <span className="chip chip-accent">self-hosted</span>
-                <strong>Docker, auth, watch folders</strong>
-                <p>Run on a server or NAS with AUTH_TOKEN protection, optional watch folders, and VPN-friendly deployment.</p>
-              </article>
-            </div>
+              </figcaption>
+            </figure>
           </div>
         </section>
 
-        <section id="features" className="section">
-          <div className="section-heading reveal reveal-1">
-            <span className="section-label">Capability signals</span>
-            <h2>Purpose-built for session control and visibility.</h2>
-            <p>Rustatio stays direct: shape the session, run it, and see what is happening without digging through tabs.</p>
-          </div>
-          <div className="card-grid proof-grid">
-            {proofCards.map(card => (
-              <article className="feature-card reveal reveal-2" key={card.title}>
-                <div className="feature-accent"></div>
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="screenshots" className="section showcase-section">
-          <div className="section-heading reveal reveal-1">
-            <span className="section-label">Screenshots</span>
-            <h2>The product, shown as it actually runs.</h2>
-            <p>Every view shown here comes straight from the product: the main workspace, live metrics, grid workflows, watch folders, remote auth, and the light theme.</p>
-          </div>
-          <div className="showcase-collage reveal reveal-2">
-            <div className="showcase-stage">
-              {showcase.map((item, index) => (
-                <figure className={`showcase-pane showcase-pane-${index + 1} showcase-${item.tone}`} key={item.title}>
-                  <img src={item.image} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} />
-                </figure>
-              ))}
-            </div>
-            <div className="showcase-notes">
-              {showcase.map(item => (
-                <article className={`showcase-note showcase-${item.tone}`} key={item.label}>
-                  <span className="showcase-label">{item.label}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-heading reveal reveal-1">
-            <span className="section-label">How it flows</span>
-            <h2>From import to live session.</h2>
-          </div>
-          <div className="steps-grid">
-            {steps.map(step => (
-              <article className="step-card reveal reveal-2" key={step.id}>
-                <span className="step-id">{step.id}</span>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="live-demo" className="section">
-          <div className="section-heading reveal reveal-1">
-            <span className="section-label">Live demo</span>
-            <h2>Open the browser build that is already running.</h2>
-            <p>Try the public WebAssembly version, see the UI in action, and decide whether you want the desktop app, Docker deployment, or the hosted demo.</p>
-          </div>
-          <div className="cta-row reveal reveal-2">
-            <a className="btn btn-primary" href={links.liveDemo} target="_blank" rel="noreferrer">
-              Open live demo
-            </a>
-          </div>
-        </section>
-
-        <section id="download" className="section download-section">
-          <div className="section-heading reveal reveal-1">
-            <span className="section-label">Download</span>
-            <h2>Pick the build that matches your setup.</h2>
-            <p>{releaseLabel}</p>
-          </div>
-          <div className="download-grid">
-            {downloadCards.map(card => (
-              <article className="download-card reveal reveal-2" key={card.title}>
-                <div>
-                  <h3>{card.title}</h3>
-                  <p>{card.body}</p>
+        {features.map(feature => (
+          <section className="section shell" id={feature.id} key={feature.id}>
+            <aside className="section-rail">
+              <p className="rail-label">{feature.label}</p>
+            </aside>
+            <div className="section-body">
+              <article className={`feature-row${feature.mediaSide === 'left' ? ' media-left' : ''}`}>
+                <div className="feature-copy">
+                  <h2>{feature.title}</h2>
+                  <p>{feature.body}</p>
+                  <ul className="feature-points">
+                    {feature.points.map(point => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
                 </div>
-                <small>{card.meta}</small>
-                <div className="button-row">
-                  {card.actions.map(action => {
-                    if (action.kind === 'release') {
+                <figure className="feature-media">
+                  <ThemeScreenshot pair={feature.image} />
+                  <figcaption>{feature.caption}</figcaption>
+                </figure>
+              </article>
+            </div>
+          </section>
+        ))}
+
+        <section className="section shell" id="themes">
+          <aside className="section-rail">
+            <p className="rail-label">Appearance</p>
+          </aside>
+          <div className="section-body">
+            <div className="theme-block">
+              <div className="theme-copy">
+                <h2>{themePreview.title}</h2>
+                <p>{themePreview.body}</p>
+                <ul className="theme-list" aria-label="Available app themes">
+                  {themeNames.map(name => (
+                    <li key={name}>{name}</li>
+                  ))}
+                </ul>
+              </div>
+              <figure className="theme-sheet">
+                <img
+                  src={themePreview.image}
+                  alt={themePreview.alt}
+                  width={2000}
+                  height={634}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{themePreview.caption}</figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <section className="section shell" id="self-hosted">
+          <aside className="section-rail">
+            <p className="rail-label">Self-hosted</p>
+          </aside>
+          <div className="section-body">
+            <div className="split-block split-media-left">
+              <figure className="split-media split-media-narrow">
+                <ThemeScreenshot pair={selfHosted.image} eager />
+                <figcaption>{selfHosted.caption}</figcaption>
+              </figure>
+              <div className="split-copy">
+                <h2>{selfHosted.title}</h2>
+                <p>{selfHosted.body}</p>
+                <ul className="feature-points">
+                  {selfHosted.points.map(point => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+                <a className="text-link" href={links.docker} target="_blank" rel="noreferrer">
+                  Read the Docker guide
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section shell" id="workflow">
+          <aside className="section-rail">
+            <p className="rail-label">Workflow</p>
+          </aside>
+          <div className="section-body">
+            <h2>From a file on disk to a session in motion.</h2>
+            <ol className="step-list">
+              {steps.map(step => (
+                <li className="step-row" key={step.id}>
+                  <span className="step-number">{step.id}</span>
+                  <div className="step-copy">
+                    <h3>{step.title}</h3>
+                    <p>{step.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section className="section shell" id="download">
+          <aside className="section-rail">
+            <p className="rail-label">Install</p>
+            <p className="rail-meta">{releaseLabel}</p>
+          </aside>
+          <div className="section-body">
+            <div className="section-heading-row">
+              <h2>Pick the build that matches the machine.</h2>
+              <p>Desktop packages, a Docker image, and a browser build share the same interface.</p>
+            </div>
+            <div className="install-table">
+              {downloadCards.map(card => (
+                <div className="install-row" key={card.title}>
+                  <div className="install-name">
+                    <h3>{card.title}</h3>
+                    <p className="install-meta">{card.meta}</p>
+                  </div>
+                  <p className="install-body">{card.body}</p>
+                  <div className="install-actions">
+                    {card.actions.map(action => {
+                      if (action.kind === 'release') {
+                        return (
+                          <a
+                            className="btn btn-primary btn-small"
+                            key={`${card.title}-${action.target}`}
+                            href={releaseLinks[action.target] || links.releases}
+                          >
+                            {action.label}
+                          </a>
+                        );
+                      }
+
                       return (
                         <a
-                          className="btn btn-download"
-                          key={`${card.title}-${action.target}`}
-                          href={releaseLinks[action.target] || links.releases}
+                          className="btn btn-secondary btn-small"
+                          key={`${card.title}-${action.label}`}
+                          href={action.href}
+                          target="_blank"
+                          rel="noreferrer"
                         >
                           {action.label}
                         </a>
                       );
-                    }
-
-                    return (
-                      <a className="btn btn-ghost" key={`${card.title}-${action.label}`} href={action.href} target="_blank" rel="noreferrer">
-                        {action.label}
-                      </a>
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section utility-section">
-          <div className="utility-grid">
-            <div>
-              <div className="section-heading reveal reveal-1 left-tight">
-                <span className="section-label">Where it fits</span>
-                <h2>Choose the delivery mode that matches the way you work.</h2>
-              </div>
-              <div className="stack-grid">
-                {useCases.map(item => (
-                  <article className="stack-card reveal reveal-2" key={item.title}>
-                    <h3>{item.title}</h3>
-                    <p>{item.body}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="section-heading reveal reveal-1 left-tight">
-                <span className="section-label">Guardrails</span>
-                <h2>Built for power users, with the warnings still visible.</h2>
-              </div>
-              <div className="stack-grid">
-                {safeguards.map(item => (
-                  <article className="stack-card safeguard-card reveal reveal-2" key={item.title}>
-                    <h3>{item.title}</h3>
-                    <p>{item.body}</p>
-                  </article>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="section faq-section">
-          <div className="section-heading reveal reveal-1">
-            <span className="section-label">FAQ</span>
-            <h2>Short answers before you jump in.</h2>
-          </div>
-          <div className="faq-grid">
-            {faq.map(item => (
-              <details className="faq-item reveal reveal-2" key={item.question}>
-                <summary>{item.question}</summary>
-                <p>{item.answer}</p>
-              </details>
-            ))}
+        <section className="section shell" id="guardrails">
+          <aside className="section-rail">
+            <p className="rail-label">Guardrails</p>
+          </aside>
+          <div className="section-body">
+            <h2>Built for power users. Warnings stay visible.</h2>
+            <div className="guardrail-grid">
+              <div className="guardrail-column">
+                <h3>Where it fits</h3>
+                <ul className="plain-list">
+                  {useCases.map(item => (
+                    <li key={item.title}>
+                      <strong>{item.title}</strong>
+                      <span>{item.body}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="guardrail-column">
+                <h3>What to know</h3>
+                <ul className="plain-list">
+                  {safeguards.map(item => (
+                    <li key={item.title}>
+                      <strong>{item.title}</strong>
+                      <span>{item.body}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="section final-cta reveal reveal-1">
-          <div>
-            <span className="section-label">Ready to start</span>
-            <h2>Download or try the demo.</h2>
-            <p>Cross-platform delivery, self-hosted options, and live session visibility from the same Rust-powered core.</p>
+        <section className="section shell" id="questions">
+          <aside className="section-rail">
+            <p className="rail-label">Questions</p>
+          </aside>
+          <div className="section-body">
+            <h2>Short answers before you commit.</h2>
+            <div className="faq-list">
+              {faq.map(item => (
+                <details className="faq-row" key={item.question}>
+                  <summary>{item.question}</summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
           </div>
-          <div className="cta-row">
-            <a className="btn btn-primary" href={links.guide}>
-              Open docs
+        </section>
+
+        <section className="closing shell">
+          <div className="closing-copy">
+            <h2>Take the wheel.</h2>
+            <p>Install the desktop app, run it from Docker, or open the web build and start with a sample session.</p>
+          </div>
+          <div className="closing-actions">
+            <a className="btn btn-primary" href="#download">
+              Download Rustatio
             </a>
-            <a className="btn btn-secondary" href={links.liveDemo} target="_blank" rel="noreferrer">
-              Open live demo
-            </a>
-            <a className="text-link" href={links.releases} target="_blank" rel="noreferrer">
-              Releases
+            <a className="btn btn-secondary" href={links.guide}>
+              Read the docs
             </a>
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
-        <div className="footer-links">
-          <a href={links.guide}>Docs</a>
-          <a href={links.liveDemo} target="_blank" rel="noreferrer">
-            Live demo
-          </a>
-          <a href={links.docker} target="_blank" rel="noreferrer">
-            Docker
-          </a>
-          <a href={links.repo} target="_blank" rel="noreferrer">
-            Codeberg
-          </a>
-          <a href={links.webGuide} target="_blank" rel="noreferrer">
-            Web setup
-          </a>
+        <div className="shell footer-inner">
+          <div className="footer-brand">
+            <img className="footer-mark" src={brandIconPath} alt="" width={24} height={24} />
+            <div>
+              <span className="footer-name">Rustatio</span>
+              <p>{FOOTER_COPY}</p>
+            </div>
+          </div>
+          <div className="footer-links">
+            <a href={links.guide}>Docs</a>
+            <a href={links.liveDemo} target="_blank" rel="noreferrer">
+              Live demo
+            </a>
+            <a href={links.docker} target="_blank" rel="noreferrer">
+              Docker
+            </a>
+            <a className="github-link" href={links.repo} target="_blank" rel="noreferrer">
+              <GitHubIcon />
+              GitHub
+            </a>
+          </div>
+          <div className="footer-copy">
+            <SiteCredit />
+          </div>
         </div>
-        <span className="footer-copy">
-          {FOOTER_COPY} <span aria-label={`Current year ${currentYear}`}>{currentYear}</span>
-        </span>
       </footer>
     </div>
   );

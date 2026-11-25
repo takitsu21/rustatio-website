@@ -13,8 +13,8 @@ export const THEME_KEY = 'rustatio-theme';
 
 /** Maps each theme to the matching browser UI color. */
 export const THEME_META: Record<Theme, string> = {
-  dark: '#1e1e2e',
-  light: '#eff1f5',
+  dark: '#0f1211',
+  light: '#f4f5f1',
 };
 
 /** Normalizes arbitrary theme input into a supported theme value. */
