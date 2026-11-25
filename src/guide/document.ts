@@ -9,9 +9,12 @@ const REPOSITORY_README_PATH = path.resolve(process.cwd(), 'README.md');
 /** Stores the upstream README URL used as the primary guide source. */
 const REMOTE_README_URL = 'https://raw.githubusercontent.com/takitsu21/rustatio/refs/heads/main/README.md';
 
+/** Busts stale build caches so each deployment fetches the latest upstream README. */
+const REMOTE_README_CACHE_BUSTER = process.env.GITHUB_SHA ?? String(Date.now());
+
 /** Provides a final fallback guide document when no richer source is available. */
 const EMERGENCY_GUIDE_DOCUMENT: GuideDocument = {
-  title: 'Get Started',
+  title: 'Rustatio docs',
   intro: 'Guide content is unavailable in this workspace, so only a minimal placeholder can be rendered.',
   html: '<h2 id="getting-started">Getting Started</h2><p>The source guide is unavailable in this checkout.</p>',
   sections: [{ depth: 2, text: 'Getting Started', slug: 'getting-started' }],
@@ -30,7 +33,7 @@ async function readGuideDocumentFromLocalReadme(): Promise<GuideDocument | null>
 /** Attempts to build the guide document from the upstream repository README. */
 async function readGuideDocumentFromRemoteReadme(): Promise<GuideDocument | null> {
   try {
-    const response = await fetch(REMOTE_README_URL, {
+    const response = await fetch(`${REMOTE_README_URL}?v=${REMOTE_README_CACHE_BUSTER}`, {
       cache: 'force-cache',
     });
 
@@ -45,7 +48,11 @@ async function readGuideDocumentFromRemoteReadme(): Promise<GuideDocument | null
   }
 }
 
-/** Loads the guide document using the best static source available in the workspace. */
+/** Loads the guide document from the upstream README, then local and emergency fallbacks. */
 export async function loadGuideDocument(): Promise<GuideDocument> {
-  return (await readGuideDocumentFromRemoteReadme()) || (await readGuideDocumentFromLocalReadme()) || EMERGENCY_GUIDE_DOCUMENT;
+  return (
+    (await readGuideDocumentFromRemoteReadme()) ||
+    (await readGuideDocumentFromLocalReadme()) ||
+    EMERGENCY_GUIDE_DOCUMENT
+  );
 }

@@ -85,7 +85,7 @@ test('applyThemeState updates document attributes and themed screenshots', () =>
   assert.equal(theme, 'light');
   assert.equal(root.dataset.theme, 'light');
   assert.equal(root.style.colorScheme, 'light');
-  assert.equal(meta.content, '#eff1f5');
+  assert.equal(meta.content, '#f4f5f1');
   assert.equal((toggle as unknown as MockToggleElement).attrs['aria-label'], 'Switch to dark theme');
   assert.equal((toggle as unknown as MockToggleElement).attrs['aria-pressed'], 'true');
   assert.equal(label.textContent, 'Light');

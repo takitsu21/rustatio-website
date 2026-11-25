@@ -7,6 +7,8 @@ import Link from 'next/link';
 
 import { brandIconPath, links } from '../content';
 import type { GuideDocument } from '../guide/markdown';
+import { GitHubIcon } from './github-icon';
+import { SiteCredit } from './site-credit';
 import { ThemeToggle } from './theme-toggle';
 
 /** Renders the guide page and wires up client-side copy buttons for code blocks. */
@@ -114,7 +116,8 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
             <a href={links.liveDemo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
               Live demo
             </a>
-            <a href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
+            <a className="github-link" href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
+              <GitHubIcon />
               GitHub
             </a>
           </div>
@@ -157,6 +160,17 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
             </div>
           </section>
 
+          <details className="guide-mobile-index">
+            <summary>On this page</summary>
+            <nav aria-label="Guide sections">
+              {primarySections.map(section => (
+                <a href={`#${section.slug}`} key={section.slug}>
+                  {section.text}
+                </a>
+              ))}
+            </nav>
+          </details>
+
           <article className="guide-article" ref={articleRef} dangerouslySetInnerHTML={{ __html: guide.html }}></article>
         </main>
 
@@ -171,6 +185,10 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
           </nav>
         </aside>
       </div>
+
+      <footer className="guide-footer">
+        <SiteCredit />
+      </footer>
     </div>
   );
 }

@@ -24,9 +24,9 @@ export function buildReleaseLinks(tag: string): Record<ReleaseTarget, string> {
 
   return {
     'windows-exe': `${links.repo}/releases/download/${tag}/Rustatio_${version}_x64-setup.exe`,
-    'macos-dmg': `${links.repo}/releases/download/${tag}/Rustatio_${version}_x64.dmg`,
+    'macos-dmg': `${links.repo}/releases/download/${tag}/Rustatio_${version}_universal.dmg`,
     'linux-deb': `${links.repo}/releases/download/${tag}/Rustatio_${version}_amd64.deb`,
-    'linux-rpm': `${links.repo}/releases/download/${tag}/Rustatio_${version}_x86_64.rpm`,
+    'linux-rpm': `${links.repo}/releases/download/${tag}/Rustatio-${version}-1.x86_64.rpm`,
     'linux-appimage': `${links.repo}/releases/download/${tag}/Rustatio_${version}_amd64.AppImage`,
   };
 }
