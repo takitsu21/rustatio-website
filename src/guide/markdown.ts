@@ -29,7 +29,8 @@ export interface GuideDocument {
 const README_TITLE_PATTERN = /^#\s+.*Rustatio\s*$/m;
 
 /** Provides a fallback intro when the README has no paragraph after its first heading. */
-const DEFAULT_GUIDE_INTRO = 'Installation, Docker deployment, web usage, and configuration notes generated directly from the repository README.';
+const DEFAULT_GUIDE_INTRO =
+  'Installation, Docker deployment, web usage, and configuration notes generated directly from the repository README.';
 
 /** Matches GitHub-style blockquote alert markers such as [!IMPORTANT]. */
 const GITHUB_ALERT_PATTERN = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/;
@@ -70,8 +71,8 @@ export function extractGuideMarkdown(readme: string): string {
 /** Removes the README intro paragraph after promoting it into the page hero. */
 function removeIntroParagraph(markdown: string): string {
   const tree = unified().use(remarkParse).parse(markdown) as MdastRoot;
-  const firstHeadingIndex = tree.children.findIndex(node => node.type === 'heading');
-  const firstParagraphIndex = tree.children.findIndex(node => node.type === 'paragraph');
+  const firstHeadingIndex = tree.children.findIndex((node) => node.type === 'heading');
+  const firstParagraphIndex = tree.children.findIndex((node) => node.type === 'paragraph');
 
   if (firstParagraphIndex !== 0 || firstHeadingIndex <= 0) {
     return markdown;
@@ -90,13 +91,16 @@ function removeIntroParagraph(markdown: string): string {
 /** Reads the first README paragraph after the title for the page intro. */
 function getGuideIntro(markdown: string): string {
   const tree = unified().use(remarkParse).parse(markdown) as MdastRoot;
-  const paragraph = tree.children.find(node => node.type === 'paragraph');
+  const paragraph = tree.children.find((node) => node.type === 'paragraph');
   return paragraph ? toString(paragraph) : DEFAULT_GUIDE_INTRO;
 }
 
 /** Removes markdown formatting so headings can be normalized for navigation labels. */
 export function normalizeHeadingText(text: string): string {
-  return text.replace(/^[^\p{Letter}\p{Number}]+/u, '').replace(/\s+/g, ' ').trim();
+  return text
+    .replace(/^[^\p{Letter}\p{Number}]+/u, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /** Converts a normalized heading into a GitHub-style URL slug. */
@@ -111,7 +115,7 @@ export function collectSections(markdown: string): GuideSection[] {
   const tree = unified().use(remarkParse).parse(markdown) as MdastRoot;
   const sections: GuideSection[] = [];
 
-  visit(tree, 'heading', node => {
+  visit(tree, 'heading', (node) => {
     if (node.depth !== 2 && node.depth !== 3) {
       return;
     }
@@ -164,7 +168,7 @@ export function rewriteImageSrc(src: string): string {
 /** Ensures links and images point to the right static or upstream location. */
 function rehypeRewriteAssets() {
   return (tree: HastRoot) => {
-    visit(tree, 'element', node => {
+    visit(tree, 'element', (node) => {
       if (node.tagName === 'a') {
         const href = getStringProperty(node.properties, 'href');
         if (!href) {
@@ -220,12 +224,12 @@ function rehypeRewriteAssets() {
 /** Converts GitHub blockquote alerts into labelled callouts. */
 function rehypeGitHubAlerts() {
   return (tree: HastRoot) => {
-    visit(tree, 'element', node => {
+    visit(tree, 'element', (node) => {
       if (node.tagName !== 'blockquote') {
         return;
       }
 
-      const firstParagraph = node.children.find(child => child.type === 'element' && child.tagName === 'p');
+      const firstParagraph = node.children.find((child) => child.type === 'element' && child.tagName === 'p');
       if (!firstParagraph || firstParagraph.type !== 'element') {
         return;
       }
@@ -255,7 +259,7 @@ function rehypeHeadingIds() {
   const slugger = createSlugger();
 
   return (tree: HastRoot) => {
-    visit(tree, 'element', node => {
+    visit(tree, 'element', (node) => {
       if (node.tagName !== 'h2' && node.tagName !== 'h3') {
         return;
       }
@@ -269,18 +273,21 @@ function rehypeHeadingIds() {
 /** Adds the guide-specific code block classes and language labels. */
 function rehypeGuideCodeBlocks() {
   return (tree: HastRoot) => {
-    visit(tree, 'element', node => {
+    visit(tree, 'element', (node) => {
       if (node.tagName !== 'pre') {
         return;
       }
 
-      const codeElement = node.children.find(child => child.type === 'element' && child.tagName === 'code');
+      const codeElement = node.children.find((child) => child.type === 'element' && child.tagName === 'code');
       if (!codeElement || codeElement.type !== 'element') {
         return;
       }
 
       const language = getCodeLanguage(codeElement.properties);
-      node.properties.className = mergeClassNames(node.properties.className, ['guide-code-block', `language-${language}`]);
+      node.properties.className = mergeClassNames(node.properties.className, [
+        'guide-code-block',
+        `language-${language}`,
+      ]);
       node.properties['data-lang'] = language;
       codeElement.properties.className = mergeClassNames(codeElement.properties.className, [`language-${language}`]);
     });
@@ -304,7 +311,7 @@ function getStringProperty(properties: Properties, key: string): string {
 /** Normalizes code block language information from HAST properties. */
 function getCodeLanguage(properties: Properties): string {
   const classes = normalizeClassNames(properties.className);
-  const languageClass = classes.find(className => className.startsWith('language-'));
+  const languageClass = classes.find((className) => className.startsWith('language-'));
   if (!languageClass) {
     return 'text';
   }
@@ -320,7 +327,7 @@ function normalizeClassNames(value: Properties['className']): string[] {
   }
 
   if (Array.isArray(value)) {
-    return value.flatMap(item => String(item).split(/\s+/)).filter(Boolean);
+    return value.flatMap((item) => String(item).split(/\s+/)).filter(Boolean);
   }
 
   return [];
@@ -334,7 +341,7 @@ function mergeClassNames(existing: Properties['className'], incoming: string[]):
 /** Collects the text content from a HAST element subtree. */
 function getNodeText(node: HastElement): string {
   return node.children
-    .map(child => {
+    .map((child) => {
       if (child.type === 'text') {
         return child.value;
       }

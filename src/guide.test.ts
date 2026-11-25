@@ -181,5 +181,8 @@ docker compose up -d
 ${fence}
 `);
 
-  assert.match(guide.html, /<pre class="guide-code-block language-bash" data-lang="bash"><code class="hljs language-bash">docker compose up -d\n<\/code><\/pre>/);
+  assert.match(
+    guide.html,
+    /<pre class="guide-code-block language-bash" data-lang="bash"><code class="hljs language-bash">docker compose up -d\n<\/code><\/pre>/,
+  );
 });

@@ -79,11 +79,11 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
     });
 
     return () => {
-      cleanups.forEach(cleanup => cleanup());
+      cleanups.forEach((cleanup) => cleanup());
     };
   }, [guide.html]);
 
-  const primarySections = useMemo(() => guide.sections.filter(section => section.depth === 2), [guide.sections]);
+  const primarySections = useMemo(() => guide.sections.filter((section) => section.depth === 2), [guide.sections]);
 
   return (
     <div className="guide-shell">
@@ -99,7 +99,7 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
           aria-controls="guide-nav"
           aria-label={isNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
           onClick={() => {
-            setIsNavOpen(open => !open);
+            setIsNavOpen((open) => !open);
           }}
         >
           <span className="guide-nav-toggle-bar"></span>
@@ -116,7 +116,13 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
             <a href={links.liveDemo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
               Live demo
             </a>
-            <a className="github-link" href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
+            <a
+              className="github-link"
+              href={links.repo}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setIsNavOpen(false)}
+            >
               <GitHubIcon />
               GitHub
             </a>
@@ -134,7 +140,7 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
         <aside className="guide-sidebar">
           <p className="guide-sidebar-label">Guide</p>
           <nav className="guide-sidebar-nav" aria-label="Guide sections">
-            {primarySections.map(section => (
+            {primarySections.map((section) => (
               <a href={`#${section.slug}`} key={section.slug}>
                 {section.text}
               </a>
@@ -163,7 +169,7 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
           <details className="guide-mobile-index">
             <summary>On this page</summary>
             <nav aria-label="Guide sections">
-              {primarySections.map(section => (
+              {primarySections.map((section) => (
                 <a href={`#${section.slug}`} key={section.slug}>
                   {section.text}
                 </a>
@@ -171,13 +177,17 @@ export function GuidePage({ guide }: Readonly<{ guide: GuideDocument }>): JSX.El
             </nav>
           </details>
 
-          <article className="guide-article" ref={articleRef} dangerouslySetInnerHTML={{ __html: guide.html }}></article>
+          <article
+            className="guide-article"
+            ref={articleRef}
+            dangerouslySetInnerHTML={{ __html: guide.html }}
+          ></article>
         </main>
 
         <aside className="guide-toc">
           <p className="guide-sidebar-label">On this page</p>
           <nav className="guide-sidebar-nav guide-sidebar-nav-compact" aria-label="Table of contents">
-            {guide.sections.map(section => (
+            {guide.sections.map((section) => (
               <a className={`depth-${section.depth}`} href={`#${section.slug}`} key={section.slug}>
                 {section.text}
               </a>

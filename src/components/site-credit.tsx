@@ -13,7 +13,15 @@ export function SiteCredit(): JSX.Element {
       <span className="site-credit-copyright">
         Copyright © <span aria-label={`Current year ${currentYear}`}>{currentYear}</span>{' '}
         <a className="site-credit-author" href={links.profile} target="_blank" rel="noreferrer">
-          <img className="site-credit-avatar" src={avatarUrl} alt="" width={14} height={14} loading="lazy" decoding="async" />
+          <img
+            className="site-credit-avatar"
+            src={avatarUrl}
+            alt=""
+            width={14}
+            height={14}
+            loading="lazy"
+            decoding="async"
+          />
           <span className="site-credit-name">takitsu21</span>
         </a>
       </span>

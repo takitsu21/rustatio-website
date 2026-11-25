@@ -97,7 +97,7 @@ export function HomePage(): JSX.Element {
             aria-controls="home-nav"
             aria-label={isNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
             onClick={() => {
-              setIsNavOpen(open => !open);
+              setIsNavOpen((open) => !open);
             }}
           >
             <span className="nav-toggle-bar"></span>
@@ -123,7 +123,13 @@ export function HomePage(): JSX.Element {
               <a href={links.guide} onClick={() => setIsNavOpen(false)}>
                 Docs
               </a>
-              <a className="github-link" href={links.repo} target="_blank" rel="noreferrer" onClick={() => setIsNavOpen(false)}>
+              <a
+                className="github-link"
+                href={links.repo}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setIsNavOpen(false)}
+              >
                 <GitHubIcon />
                 GitHub
               </a>
@@ -178,7 +184,7 @@ export function HomePage(): JSX.Element {
               />
             </div>
             <figcaption className="frame-readout">
-              {heroCopy.readout.map(item => (
+              {heroCopy.readout.map((item) => (
                 <span key={item}>{item}</span>
               ))}
             </figcaption>
@@ -187,7 +193,7 @@ export function HomePage(): JSX.Element {
 
         <section className="spec-band shell" aria-label="Rustatio at a glance">
           <dl>
-            {specSheet.map(item => (
+            {specSheet.map((item) => (
               <div className="spec-item" key={item.label}>
                 <dt>{item.label}</dt>
                 <dd>{item.value}</dd>
@@ -202,7 +208,7 @@ export function HomePage(): JSX.Element {
             <p className="client-band-note">Six profiles, each with the version string trackers expect.</p>
           </div>
           <ul className="client-list">
-            {clients.map(client => (
+            {clients.map((client) => (
               <li className="client-item" key={client.name}>
                 <span className="client-mark">
                   <ClientIcon name={client.icon} className="client-icon" />
@@ -244,7 +250,7 @@ export function HomePage(): JSX.Element {
                 </video>
               </div>
               <figcaption className="frame-readout">
-                {demo.chapters.map(chapter => (
+                {demo.chapters.map((chapter) => (
                   <span key={chapter}>{chapter}</span>
                 ))}
               </figcaption>
@@ -252,7 +258,7 @@ export function HomePage(): JSX.Element {
           </div>
         </section>
 
-        {features.map(feature => (
+        {features.map((feature) => (
           <section className="section shell" id={feature.id} key={feature.id}>
             <aside className="section-rail">
               <p className="rail-label">{feature.label}</p>
@@ -263,7 +269,7 @@ export function HomePage(): JSX.Element {
                   <h2>{feature.title}</h2>
                   <p>{feature.body}</p>
                   <ul className="feature-points">
-                    {feature.points.map(point => (
+                    {feature.points.map((point) => (
                       <li key={point}>{point}</li>
                     ))}
                   </ul>
@@ -287,7 +293,7 @@ export function HomePage(): JSX.Element {
                 <h2>{themePreview.title}</h2>
                 <p>{themePreview.body}</p>
                 <ul className="theme-list" aria-label="Available app themes">
-                  {themeNames.map(name => (
+                  {themeNames.map((name) => (
                     <li key={name}>{name}</li>
                   ))}
                 </ul>
@@ -321,7 +327,7 @@ export function HomePage(): JSX.Element {
                 <h2>{selfHosted.title}</h2>
                 <p>{selfHosted.body}</p>
                 <ul className="feature-points">
-                  {selfHosted.points.map(point => (
+                  {selfHosted.points.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
                 </ul>
@@ -340,7 +346,7 @@ export function HomePage(): JSX.Element {
           <div className="section-body">
             <h2>From a file on disk to a session in motion.</h2>
             <ol className="step-list">
-              {steps.map(step => (
+              {steps.map((step) => (
                 <li className="step-row" key={step.id}>
                   <span className="step-number">{step.id}</span>
                   <div className="step-copy">
@@ -364,7 +370,7 @@ export function HomePage(): JSX.Element {
               <p>Desktop packages, a Docker image, and a browser build share the same interface.</p>
             </div>
             <div className="install-table">
-              {downloadCards.map(card => (
+              {downloadCards.map((card) => (
                 <div className="install-row" key={card.title}>
                   <div className="install-name">
                     <h3>{card.title}</h3>
@@ -372,7 +378,7 @@ export function HomePage(): JSX.Element {
                   </div>
                   <p className="install-body">{card.body}</p>
                   <div className="install-actions">
-                    {card.actions.map(action => {
+                    {card.actions.map((action) => {
                       if (action.kind === 'release') {
                         return (
                           <a
@@ -414,7 +420,7 @@ export function HomePage(): JSX.Element {
               <div className="guardrail-column">
                 <h3>Where it fits</h3>
                 <ul className="plain-list">
-                  {useCases.map(item => (
+                  {useCases.map((item) => (
                     <li key={item.title}>
                       <strong>{item.title}</strong>
                       <span>{item.body}</span>
@@ -425,7 +431,7 @@ export function HomePage(): JSX.Element {
               <div className="guardrail-column">
                 <h3>What to know</h3>
                 <ul className="plain-list">
-                  {safeguards.map(item => (
+                  {safeguards.map((item) => (
                     <li key={item.title}>
                       <strong>{item.title}</strong>
                       <span>{item.body}</span>
@@ -444,7 +450,7 @@ export function HomePage(): JSX.Element {
           <div className="section-body">
             <h2>Short answers before you commit.</h2>
             <div className="faq-list">
-              {faq.map(item => (
+              {faq.map((item) => (
                 <details className="faq-row" key={item.question}>
                   <summary>{item.question}</summary>
                   <p>{item.answer}</p>

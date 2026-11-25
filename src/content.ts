@@ -1,10 +1,5 @@
 /** Defines the supported release asset keys used on the download actions. */
-export type ReleaseTarget =
-  | 'windows-exe'
-  | 'macos-dmg'
-  | 'linux-deb'
-  | 'linux-rpm'
-  | 'linux-appimage';
+export type ReleaseTarget = 'windows-exe' | 'macos-dmg' | 'linux-deb' | 'linux-rpm' | 'linux-appimage';
 
 export interface LinkMap {
   guide: string;
@@ -202,11 +197,7 @@ export const features: Feature[] = [
     label: 'Fleet',
     title: 'Six clients. One window. No tab archaeology.',
     body: 'Keep every session in a single table. Ratios, rates, peers, progress, and state stay in view, whether you run one instance or twenty.',
-    points: [
-      'Tracker-aware client profiles',
-      'Live ratio, rate, and peer columns',
-      'Bulk start, stop, and edit',
-    ],
+    points: ['Tracker-aware client profiles', 'Live ratio, rate, and peer columns', 'Bulk start, stop, and edit'],
     image: {
       dark: screenshots.grid,
       light: screenshots.lightGrid,
@@ -220,11 +211,7 @@ export const features: Feature[] = [
     label: 'Automation',
     title: 'Drop a torrent. It is already in the queue.',
     body: 'Point Rustatio at a folder and new .torrent files arrive as pending. Expand the tree, review the intake, and start the sessions that matter.',
-    points: [
-      'Watch folders with pending state',
-      'Per-instance rate and stop rules',
-      'Token-gated remote access',
-    ],
+    points: ['Watch folders with pending state', 'Per-instance rate and stop rules', 'Token-gated remote access'],
     image: {
       dark: screenshots.watch,
       light: screenshots.lightWatch,
@@ -238,11 +225,7 @@ export const features: Feature[] = [
     label: 'Metrics',
     title: 'The numbers you need before the ratio moves.',
     body: 'Session stats, total stats, transfer history, and peer counts sit beside the controls. You can see the shape of a session without leaving it.',
-    points: [
-      'Upload and download history',
-      'Peer and tracker scrape counts',
-      'Stop conditions that respect the plan',
-    ],
+    points: ['Upload and download history', 'Peer and tracker scrape counts', 'Stop conditions that respect the plan'],
     image: {
       dark: screenshots.metrics,
       light: screenshots.lightMetrics,
@@ -386,7 +369,8 @@ export const safeguards: ContentCard[] = [
 export const faq: FaqItem[] = [
   {
     question: 'What can Rustatio emulate?',
-    answer: 'Six client profiles: uTorrent, qBittorrent, Transmission, Deluge, BitTorrent, and rTorrent, with matching versions and announce behavior.',
+    answer:
+      'Six client profiles: uTorrent, qBittorrent, Transmission, Deluge, BitTorrent, and rTorrent, with matching versions and announce behavior.',
   },
   {
     question: 'Can I run it on a server?',
@@ -406,6 +390,7 @@ export const faq: FaqItem[] = [
   },
   {
     question: 'Where should I start?',
-    answer: 'Use the desktop app for the shortest path, or Docker if you want a persistent instance with remote access.',
+    answer:
+      'Use the desktop app for the shortest path, or Docker if you want a persistent instance with remote access.',
   },
 ];

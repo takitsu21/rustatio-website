@@ -15,7 +15,7 @@ test('screenshot map covers both themes and the theme sheet', () => {
 
   assert.equal(paths.length, 11);
   assert.equal(new Set(paths).size, paths.length);
-  assert.ok(paths.every(path => path.startsWith('/screenshots/')));
+  assert.ok(paths.every((path) => path.startsWith('/screenshots/')));
   assert.match(screenshots.lightGrid, /light-grid-view\.png$/);
   assert.match(screenshots.lightMetrics, /light-metrics\.png$/);
   assert.match(screenshots.lightWatch, /light-watch-folder\.png$/);
@@ -31,11 +31,11 @@ test('demo points at the local walkthrough video', () => {
 
 test('client band lists six distinct profiles', () => {
   assert.equal(clients.length, 6);
-  assert.equal(new Set(clients.map(client => client.name)).size, clients.length);
-  assert.ok(clients.every(client => client.version.length > 0));
+  assert.equal(new Set(clients.map((client) => client.name)).size, clients.length);
+  assert.ok(clients.every((client) => client.version.length > 0));
 });
 
 test('download card titles are unique', () => {
-  const titles = downloadCards.map(card => card.title);
+  const titles = downloadCards.map((card) => card.title);
   assert.equal(new Set(titles).size, titles.length);
 });

@@ -34,7 +34,10 @@ export function resolveTheme(storedTheme: string | null | undefined, prefersDark
 
 /** Reads the effective theme from browser storage and media preference. */
 export function getBrowserTheme(): Theme {
-  return resolveTheme(window.localStorage.getItem(THEME_KEY), window.matchMedia('(prefers-color-scheme: dark)').matches);
+  return resolveTheme(
+    window.localStorage.getItem(THEME_KEY),
+    window.matchMedia('(prefers-color-scheme: dark)').matches,
+  );
 }
 
 /** Builds the current and next theme labels used by the toggle button. */
@@ -55,7 +58,7 @@ export function getThemeState(theme: string | null | undefined): ThemeState {
 export function applyThemeState(
   theme: string | null | undefined,
   root: HTMLElement = document.documentElement,
-  doc: Document = document
+  doc: Document = document,
 ): Theme {
   const state = getThemeState(theme);
   const meta = doc.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
@@ -67,22 +70,22 @@ export function applyThemeState(
     meta.setAttribute('content', THEME_META[state.current]);
   }
 
-  doc.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(node => {
+  doc.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((node) => {
     node.setAttribute('aria-label', state.ariaLabel);
     node.setAttribute('title', state.ariaLabel);
     node.setAttribute('aria-pressed', String(state.current === 'light'));
     node.setAttribute('data-theme-current', state.current);
   });
 
-  doc.querySelectorAll<HTMLElement>('[data-theme-label]').forEach(node => {
+  doc.querySelectorAll<HTMLElement>('[data-theme-label]').forEach((node) => {
     node.textContent = state.currentLabel;
   });
 
-  doc.querySelectorAll<HTMLElement>('[data-theme-next]').forEach(node => {
+  doc.querySelectorAll<HTMLElement>('[data-theme-next]').forEach((node) => {
     node.textContent = state.nextLabel;
   });
 
-  doc.querySelectorAll<HTMLImageElement>('[data-theme-shot]').forEach(node => {
+  doc.querySelectorAll<HTMLImageElement>('[data-theme-shot]').forEach((node) => {
     const src = state.current === 'light' ? node.dataset.lightSrc : node.dataset.darkSrc;
     if (src) {
       node.setAttribute('src', src);

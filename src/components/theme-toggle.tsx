@@ -3,14 +3,7 @@
 import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
 
-import {
-  applyThemeState,
-  getBrowserTheme,
-  getThemeState,
-  normalizeTheme,
-  THEME_KEY,
-  type Theme,
-} from '../theme';
+import { applyThemeState, getBrowserTheme, getThemeState, normalizeTheme, THEME_KEY, type Theme } from '../theme';
 
 /** Resolves the theme currently applied to the document, falling back to the system value. */
 function resolveDocumentTheme(): Theme {
@@ -27,7 +20,7 @@ export function ThemeToggle(): JSX.Element {
 
     const syncTheme = (nextTheme: Theme) => {
       applyThemeState(nextTheme);
-      setTheme(currentTheme => (currentTheme === nextTheme ? currentTheme : nextTheme));
+      setTheme((currentTheme) => (currentTheme === nextTheme ? currentTheme : nextTheme));
     };
 
     frameId = window.requestAnimationFrame(() => {
