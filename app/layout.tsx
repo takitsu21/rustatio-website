@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
 
 import './base.css';
 import '../src/app.css';
@@ -8,14 +9,33 @@ import '../src/guide-page.css';
 
 import { buildThemeScript } from '../src/theme';
 
-/** Stores the optional base path for static metadata assets. */
+/** Loads the self-hosted display and body typeface used across the site. */
+const schibsted = localFont({
+  src: [
+    { path: '../public/fonts/schibsted-grotesk-400.woff2', weight: '400', style: 'normal' },
+    { path: '../public/fonts/schibsted-grotesk-500.woff2', weight: '500', style: 'normal' },
+    { path: '../public/fonts/schibsted-grotesk-600.woff2', weight: '600', style: 'normal' },
+    { path: '../public/fonts/schibsted-grotesk-700.woff2', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-schibsted',
+  display: 'swap',
+});
+
+/** Loads the self-hosted monospace typeface used for labels and data. */
+const fragment = localFont({
+  src: '../public/fonts/fragment-mono-400.woff2',
+  variable: '--font-fragment',
+  display: 'swap',
+});
+
+/** Stores the optional GitHub Pages base path for static metadata assets. */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 /** Defines the shared metadata for the exported site. */
 export const metadata: Metadata = {
-  title: 'Rustatio - BitTorrent Ratio Management, Built for Speed',
+  title: 'Rustatio - BitTorrent Ratio Management for Your Whole Fleet',
   description:
-    'Rustatio is a fast cross-platform BitTorrent ratio management tool with desktop downloads, Docker deployment, and a shared web UI.',
+    'Rustatio emulates five torrent clients, shapes realistic transfer rates, and keeps every session in one dense, self-hosted interface.',
   manifest: `${BASE_PATH}/site.webmanifest`,
   icons: {
     icon: [
@@ -31,13 +51,18 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#1e1e2e',
+  themeColor: '#f4f5f1',
 };
 
 /** Renders the shared document shell for the static Next.js export. */
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      className={`${schibsted.variable} ${fragment.variable}`}
+    >
       <body>
         <script dangerouslySetInnerHTML={{ __html: buildThemeScript() }} />
         {children}

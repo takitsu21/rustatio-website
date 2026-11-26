@@ -10,7 +10,8 @@ export const dynamic = 'error';
 /** Defines the guide-specific metadata for the exported guide page. */
 export const metadata: Metadata = {
   title: 'Rustatio Docs',
-  description: 'Rustatio docs generated from the repository README with install, Docker, web setup, and getting started instructions.',
+  description:
+    'Rustatio docs generated from the repository README with install, Docker, web setup, and getting started instructions.',
 };
 
 /** Renders the exported guide route using the best static source available. */

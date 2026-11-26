@@ -5,13 +5,13 @@ export interface ReleaseInfo {
   url: string;
 }
 
-interface ReleaseResponse {
+interface GitHubReleaseResponse {
   tag_name?: string;
   html_url?: string;
 }
 
-/** Stores the Codeberg API endpoint used to hydrate the latest release links. */
-const RELEASE_API_URL = 'https://codeberg.org/api/v1/repos/takitsu21/rustatio/releases/latest';
+/** Stores the GitHub API endpoint used to hydrate the latest release links. */
+const RELEASE_API_URL = 'https://api.github.com/repos/takitsu21/rustatio/releases/latest';
 
 /** Removes the leading version prefix from a release tag when needed. */
 export function normalizeTag(tag: string): string {
@@ -24,9 +24,9 @@ export function buildReleaseLinks(tag: string): Record<ReleaseTarget, string> {
 
   return {
     'windows-exe': `${links.repo}/releases/download/${tag}/Rustatio_${version}_x64-setup.exe`,
-    'macos-dmg': `${links.repo}/releases/download/${tag}/Rustatio_${version}_x64.dmg`,
+    'macos-dmg': `${links.repo}/releases/download/${tag}/Rustatio_${version}_universal.dmg`,
     'linux-deb': `${links.repo}/releases/download/${tag}/Rustatio_${version}_amd64.deb`,
-    'linux-rpm': `${links.repo}/releases/download/${tag}/Rustatio_${version}_x86_64.rpm`,
+    'linux-rpm': `${links.repo}/releases/download/${tag}/Rustatio-${version}-1.x86_64.rpm`,
     'linux-appimage': `${links.repo}/releases/download/${tag}/Rustatio_${version}_amd64.AppImage`,
   };
 }
@@ -36,12 +36,12 @@ export function getReleaseLabel(tag: string): string {
   return `Latest release ${tag}`;
 }
 
-/** Fetches the latest release metadata from Codeberg for client-side hydration. */
+/** Fetches the latest release metadata from GitHub for client-side hydration. */
 export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
   try {
     const response = await fetch(RELEASE_API_URL, {
       headers: {
-        Accept: 'application/json',
+        Accept: 'application/vnd.github+json',
       },
     });
 
@@ -49,7 +49,7 @@ export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
       return null;
     }
 
-    const data = (await response.json()) as ReleaseResponse;
+    const data = (await response.json()) as GitHubReleaseResponse;
     if (!data.tag_name) {
       return null;
     }
